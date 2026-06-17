@@ -1,0 +1,9 @@
+/bin/
+/obj/
+/dist/
+/assets/*.ico
+.vs/
+*.user
+*.suo
+*.tmp
+*.log
