@@ -126,25 +126,32 @@ namespace PromptBar
 
             Border shell = new Border();
             shell.Background = ShellBrush();
-            shell.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(34, 255, 255, 255));
+            shell.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(52, 255, 255, 255));
             shell.BorderThickness = new Thickness(1);
             shell.CornerRadius = shellRadius;
             shell.SnapsToDevicePixels = false;
             shell.Effect = new DropShadowEffect
             {
                 Color = System.Windows.Media.Color.FromRgb(0, 0, 0),
-                BlurRadius = 22,
-                ShadowDepth = 5,
-                Opacity = 0.34
+                BlurRadius = 30,
+                ShadowDepth = 7,
+                Opacity = 0.42
             };
 
             Grid root = new Grid();
             shell.Child = root;
 
+            Border aeroWash = new Border();
+            aeroWash.CornerRadius = shellRadius;
+            aeroWash.Background = ShellAeroBrush();
+            aeroWash.Opacity = 0.72;
+            aeroWash.IsHitTestVisible = false;
+            root.Children.Add(aeroWash);
+
             Border glassWash = new Border();
             glassWash.CornerRadius = shellRadius;
             glassWash.Background = ShellShineBrush();
-            glassWash.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(18, 255, 255, 255));
+            glassWash.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(28, 255, 255, 255));
             glassWash.BorderThickness = new Thickness(0, 0, 0, 1);
             glassWash.IsHitTestVisible = false;
             root.Children.Add(glassWash);
@@ -242,10 +249,10 @@ namespace PromptBar
             editor.BorderThickness = new Thickness(1);
             editor.Padding = new Thickness(14, 11, 14, 11);
             editor.Background = EditorBrush();
-            editor.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(50, 255, 255, 255));
+            editor.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(66, 255, 255, 255));
             editor.Foreground = Brushes.White;
             editor.CaretBrush = Brushes.White;
-            editor.SelectionBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(110, 92, 170, 255));
+            editor.SelectionBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(118, 132, 221, 184));
             editor.FocusVisualStyle = null;
             editor.FontFamily = new FontFamily(model.FontFamilyName);
             editor.FontSize = model.FontSize;
@@ -327,8 +334,8 @@ namespace PromptBar
             LinearGradientBrush brush = new LinearGradientBrush();
             brush.StartPoint = new Point(0, 0);
             brush.EndPoint = new Point(0, 1);
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(146, 20, 23, 31), 0));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(116, 5, 7, 12), 1));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(142, 39, 43, 49), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(104, 10, 12, 18), 1));
             return brush;
         }
 
@@ -346,20 +353,16 @@ namespace PromptBar
             group.Child = content;
             group.Padding = new Thickness(4, 3, 4, 3);
             group.CornerRadius = new CornerRadius(18);
-            group.Background = new LinearGradientBrush(
-                System.Windows.Media.Color.FromArgb(88, 35, 38, 48),
-                System.Windows.Media.Color.FromArgb(58, 8, 10, 16),
-                new Point(0, 0),
-                new Point(0, 1));
-            group.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(34, 255, 255, 255));
+            group.Background = ControlGroupBrush();
+            group.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(54, 255, 255, 255));
             group.BorderThickness = new Thickness(1);
             group.SnapsToDevicePixels = false;
             group.Effect = new DropShadowEffect
             {
                 Color = System.Windows.Media.Color.FromRgb(0, 0, 0),
-                BlurRadius = 12,
+                BlurRadius = 16,
                 ShadowDepth = 2,
-                Opacity = 0.24
+                Opacity = 0.28
             };
             return group;
         }
@@ -373,8 +376,8 @@ namespace PromptBar
             button.Height = 25;
             button.Margin = new Thickness(2);
             button.Padding = new Thickness(0);
-            button.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(32, 255, 255, 255));
-            button.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(44, 255, 255, 255));
+            button.Background = GlassButtonBrush();
+            button.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(54, 255, 255, 255));
             button.Foreground = Brushes.White;
             button.Cursor = Cursors.Hand;
             button.Style = GlassButtonStyle();
@@ -393,8 +396,8 @@ namespace PromptBar
             button.Padding = new Thickness(0);
             button.Delay = 280;
             button.Interval = 85;
-            button.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(32, 255, 255, 255));
-            button.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(44, 255, 255, 255));
+            button.Background = GlassButtonBrush();
+            button.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(54, 255, 255, 255));
             button.Foreground = Brushes.White;
             button.Cursor = Cursors.Hand;
             button.Style = GlassRepeatButtonStyle();
@@ -422,8 +425,8 @@ namespace PromptBar
             button.Padding = new Thickness(0);
             button.Delay = 280;
             button.Interval = 85;
-            button.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(32, 255, 255, 255));
-            button.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(44, 255, 255, 255));
+            button.Background = GlassButtonBrush();
+            button.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(54, 255, 255, 255));
             button.Foreground = Brushes.White;
             button.Cursor = Cursors.Hand;
             button.Style = GlassRepeatButtonStyle();
@@ -447,9 +450,21 @@ namespace PromptBar
             LinearGradientBrush brush = new LinearGradientBrush();
             brush.StartPoint = new Point(0, 0);
             brush.EndPoint = new Point(0, 1);
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(249, 3, 5, 10), 0));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(245, 0, 0, 0), 0.56));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(250, 0, 0, 0), 1));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(238, 22, 24, 29), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(232, 9, 11, 16), 0.58));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(242, 2, 3, 7), 1));
+            return brush;
+        }
+
+        private Brush ShellAeroBrush()
+        {
+            LinearGradientBrush brush = new LinearGradientBrush();
+            brush.StartPoint = new Point(0, 0);
+            brush.EndPoint = new Point(1, 1);
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(34, 162, 238, 202), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(18, 95, 149, 255), 0.42));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(8, 255, 255, 255), 0.7));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0, 255, 255, 255), 1));
             return brush;
         }
 
@@ -458,9 +473,30 @@ namespace PromptBar
             LinearGradientBrush brush = new LinearGradientBrush();
             brush.StartPoint = new Point(0, 0);
             brush.EndPoint = new Point(0, 1);
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(34, 255, 255, 255), 0));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(10, 255, 255, 255), 0.28));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(48, 255, 255, 255), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(17, 255, 255, 255), 0.3));
             brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0, 255, 255, 255), 0.7));
+            return brush;
+        }
+
+        private Brush ControlGroupBrush()
+        {
+            LinearGradientBrush brush = new LinearGradientBrush();
+            brush.StartPoint = new Point(0, 0);
+            brush.EndPoint = new Point(1, 1);
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(92, 54, 59, 66), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(62, 21, 24, 31), 0.52));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(42, 7, 9, 14), 1));
+            return brush;
+        }
+
+        private Brush GlassButtonBrush()
+        {
+            LinearGradientBrush brush = new LinearGradientBrush();
+            brush.StartPoint = new Point(0, 0);
+            brush.EndPoint = new Point(0, 1);
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(50, 255, 255, 255), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(28, 255, 255, 255), 1));
             return brush;
         }
 
@@ -477,8 +513,8 @@ namespace PromptBar
         private Style GlassButtonStyleFor(Type targetType)
         {
             Style style = new Style(targetType);
-            style.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(32, 255, 255, 255))));
-            style.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(44, 255, 255, 255))));
+            style.Setters.Add(new Setter(Control.BackgroundProperty, GlassButtonBrush()));
+            style.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(54, 255, 255, 255))));
             style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1)));
             style.Setters.Add(new Setter(Control.ForegroundProperty, Brushes.White));
             style.Setters.Add(new Setter(Control.FocusVisualStyleProperty, null));
@@ -504,15 +540,15 @@ namespace PromptBar
             Trigger hover = new Trigger();
             hover.Property = UIElement.IsMouseOverProperty;
             hover.Value = true;
-            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(58, 255, 255, 255)), "Chrome"));
-            hover.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(86, 255, 255, 255)), "Chrome"));
+            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(74, 255, 255, 255)), "Chrome"));
+            hover.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(96, 255, 255, 255)), "Chrome"));
             template.Triggers.Add(hover);
 
             Trigger pressed = new Trigger();
             pressed.Property = ButtonBase.IsPressedProperty;
             pressed.Value = true;
-            pressed.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(92, 255, 255, 255)), "Chrome"));
-            pressed.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(122, 255, 255, 255)), "Chrome"));
+            pressed.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(112, 158, 232, 203)), "Chrome"));
+            pressed.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(136, 255, 255, 255)), "Chrome"));
             template.Triggers.Add(pressed);
 
             style.Setters.Add(new Setter(Control.TemplateProperty, template));
@@ -523,7 +559,7 @@ namespace PromptBar
         {
             Style style = new Style(typeof(TextBox));
             style.Setters.Add(new Setter(Control.BackgroundProperty, EditorBrush()));
-            style.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(50, 255, 255, 255))));
+            style.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(66, 255, 255, 255))));
             style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1)));
             style.Setters.Add(new Setter(Control.ForegroundProperty, Brushes.White));
             style.Setters.Add(new Setter(Control.FocusVisualStyleProperty, null));
@@ -548,7 +584,7 @@ namespace PromptBar
             Trigger focused = new Trigger();
             focused.Property = UIElement.IsKeyboardFocusWithinProperty;
             focused.Value = true;
-            focused.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(86, 255, 255, 255)), "EditorChrome"));
+            focused.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(System.Windows.Media.Color.FromArgb(126, 162, 238, 202)), "EditorChrome"));
             focused.Setters.Add(new Setter(Control.BackgroundProperty, EditorBrush(), "EditorChrome"));
             template.Triggers.Add(focused);
 
@@ -748,6 +784,7 @@ namespace PromptBar
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
             handle = helper.Handle;
+            WindowBackdrop.ApplyMicaAero(handle, false);
 
             int style = NativeMethods.GetWindowLong(handle, NativeMethods.GWL_EXSTYLE);
             style = style | NativeMethods.WS_EX_TOOLWINDOW;

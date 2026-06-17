@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 - 2026-06-17
+
+- Restyled the overlay and settings window with a Mica/Aero inspired glass design.
+- Added best-effort native Windows backdrop and blur effects.
+- Refined glass panels, controls, buttons, toggles, and sliders for a lighter interface.
+
 ## 0.3.1 - 2026-06-17
 
 - Fixed a tiny visible top-edge gap by slightly bleeding the overlay above the screen edge.
