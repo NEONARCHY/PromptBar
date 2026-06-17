@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0 - 2026-06-17
+
+- Moved settings to a fuller Windows Fluent style layout with navigation rail, central setting cards, and an about panel.
+- Strengthened native backdrop support with DWM glass frame, blur-behind, Acrylic, and Mica fallbacks.
+- Applied the stronger Acrylic-style backdrop to the floating overlay.
+
 ## 0.4.0 - 2026-06-17
 
 - Restyled the overlay and settings window with a Mica/Aero inspired glass design.

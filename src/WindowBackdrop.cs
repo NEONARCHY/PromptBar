@@ -21,6 +21,8 @@ namespace PromptBar
             TrySetDwmAttribute(handle, NativeMethods.DWMWA_USE_IMMERSIVE_DARK_MODE, 1);
             TrySetDwmAttribute(handle, NativeMethods.DWMWA_WINDOW_CORNER_PREFERENCE, DwmCornerRound);
             TrySetDwmAttribute(handle, NativeMethods.DWMWA_SYSTEMBACKDROP_TYPE, acrylic ? DwmBackdropAcrylic : DwmBackdropMica);
+            TryExtendGlassFrame(handle);
+            TryEnableDwmBlur(handle);
             TrySetAccent(handle, acrylic ? AccentEnableAcrylicBlurBehind : AccentEnableBlurBehind);
         }
 
@@ -43,7 +45,7 @@ namespace PromptBar
                 NativeMethods.AccentPolicy policy = new NativeMethods.AccentPolicy();
                 policy.AccentState = accentState;
                 policy.AccentFlags = 2;
-                policy.GradientColor = unchecked((int)0xB0181818);
+                policy.GradientColor = unchecked((int)0x70181B20);
 
                 int policySize = Marshal.SizeOf(policy);
                 policyPointer = Marshal.AllocHGlobal(policySize);
@@ -65,6 +67,38 @@ namespace PromptBar
                 {
                     Marshal.FreeHGlobal(policyPointer);
                 }
+            }
+        }
+
+        private static void TryExtendGlassFrame(IntPtr handle)
+        {
+            try
+            {
+                NativeMethods.Margins margins = new NativeMethods.Margins();
+                margins.Left = -1;
+                margins.Right = -1;
+                margins.Top = -1;
+                margins.Bottom = -1;
+                NativeMethods.DwmExtendFrameIntoClientArea(handle, ref margins);
+            }
+            catch
+            {
+            }
+        }
+
+        private static void TryEnableDwmBlur(IntPtr handle)
+        {
+            try
+            {
+                NativeMethods.DwmBlurBehind blur = new NativeMethods.DwmBlurBehind();
+                blur.Flags = NativeMethods.DWM_BB_ENABLE;
+                blur.Enable = true;
+                blur.Region = IntPtr.Zero;
+                blur.TransitionOnMaximized = false;
+                NativeMethods.DwmEnableBlurBehindWindow(handle, ref blur);
+            }
+            catch
+            {
             }
         }
     }

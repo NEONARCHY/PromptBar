@@ -784,7 +784,7 @@ namespace PromptBar
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
             handle = helper.Handle;
-            WindowBackdrop.ApplyMicaAero(handle, false);
+            WindowBackdrop.ApplyMicaAero(handle, true);
 
             int style = NativeMethods.GetWindowLong(handle, NativeMethods.GWL_EXSTYLE);
             style = style | NativeMethods.WS_EX_TOOLWINDOW;

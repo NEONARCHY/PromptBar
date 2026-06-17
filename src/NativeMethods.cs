@@ -12,6 +12,7 @@ namespace PromptBar
         public const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
         public const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
         public const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
+        public const int DWM_BB_ENABLE = 0x00000001;
 
         public const int WM_HOTKEY = 0x0312;
         public const uint MOD_ALT = 0x0001;
@@ -65,6 +66,12 @@ namespace PromptBar
         [DllImport("dwmapi.dll")]
         public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int attributeValue, int attributeSize);
 
+        [DllImport("dwmapi.dll")]
+        public static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref Margins margins);
+
+        [DllImport("dwmapi.dll")]
+        public static extern int DwmEnableBlurBehindWindow(IntPtr hwnd, ref DwmBlurBehind blurBehind);
+
         [StructLayout(LayoutKind.Sequential)]
         public struct AccentPolicy
         {
@@ -80,6 +87,24 @@ namespace PromptBar
             public int Attribute;
             public IntPtr Data;
             public int SizeOfData;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Margins
+        {
+            public int Left;
+            public int Right;
+            public int Top;
+            public int Bottom;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DwmBlurBehind
+        {
+            public int Flags;
+            public bool Enable;
+            public IntPtr Region;
+            public bool TransitionOnMaximized;
         }
     }
 }

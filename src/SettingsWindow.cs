@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,10 +52,10 @@ namespace PromptBar
             this.hotkeysChanged = hotkeysChanged;
 
             Title = T("SettingsWindowTitle");
-            MinWidth = 760;
-            MinHeight = 680;
-            Width = 820;
-            Height = 780;
+            MinWidth = 960;
+            MinHeight = 640;
+            Width = 1040;
+            Height = 720;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             WindowStyle = WindowStyle.None;
             AllowsTransparency = true;
@@ -159,12 +160,24 @@ namespace PromptBar
             Grid.SetRow(titleBar, 0);
             frame.Children.Add(titleBar);
 
+            Grid body = new Grid();
+            body.Margin = new Thickness(16, 0, 16, 16);
+            body.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(152) });
+            body.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            body.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(208) });
+            Grid.SetRow(body, 1);
+            frame.Children.Add(body);
+
+            StackPanel navigation = BuildNavigationRail();
+            Grid.SetColumn(navigation, 0);
+            body.Children.Add(navigation);
+
             ScrollViewer scrollViewer = new ScrollViewer();
             scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
-            scrollViewer.Margin = new Thickness(16, 0, 16, 16);
+            scrollViewer.Margin = new Thickness(12, 0, 12, 0);
             scrollViewer.Background = Brushes.Transparent;
-            Grid.SetRow(scrollViewer, 1);
-            frame.Children.Add(scrollViewer);
+            Grid.SetColumn(scrollViewer, 1);
+            body.Children.Add(scrollViewer);
 
             StackPanel root = new StackPanel();
             root.Margin = new Thickness(0);
@@ -177,6 +190,10 @@ namespace PromptBar
             root.Children.Add(BuildDisplaySection());
             root.Children.Add(BuildPrivacySection());
             root.Children.Add(BuildShortcutsSection());
+
+            Border aboutPanel = BuildAboutPanel();
+            Grid.SetColumn(aboutPanel, 2);
+            body.Children.Add(aboutPanel);
 
             return shell;
         }
@@ -231,6 +248,132 @@ namespace PromptBar
             titleStack.Children.Add(subtitle);
 
             return titleBar;
+        }
+
+        private StackPanel BuildNavigationRail()
+        {
+            StackPanel rail = new StackPanel();
+            rail.Margin = new Thickness(0, 0, 0, 0);
+
+            rail.Children.Add(NavigationItem("\uE713", T("GeneralSection"), true));
+            rail.Children.Add(NavigationItem("\uE8A5", T("ScriptSection"), false));
+            rail.Children.Add(NavigationItem("\uE768", T("PlaybackSection"), false));
+            rail.Children.Add(NavigationItem("\uE771", T("AppearanceSection"), false));
+            rail.Children.Add(NavigationItem("\uE7F4", T("DisplaySection"), false));
+            rail.Children.Add(NavigationItem("\uE72E", T("PrivacySection"), false));
+            rail.Children.Add(NavigationItem("\uE765", T("ShortcutsSection"), false));
+
+            return rail;
+        }
+
+        private Border NavigationItem(string glyph, string label, bool selected)
+        {
+            Border item = new Border();
+            item.Height = 34;
+            item.Margin = new Thickness(0, 0, 0, 5);
+            item.Padding = new Thickness(10, 0, 10, 0);
+            item.CornerRadius = new CornerRadius(7);
+            item.Background = selected
+                ? new SolidColorBrush(Color.FromArgb(58, 255, 255, 255))
+                : Brushes.Transparent;
+            item.BorderBrush = selected ? SettingsBorderBrush(58) : Brushes.Transparent;
+            item.BorderThickness = new Thickness(1);
+            item.SnapsToDevicePixels = false;
+
+            DockPanel content = new DockPanel();
+            content.LastChildFill = true;
+            item.Child = content;
+
+            TextBlock icon = new TextBlock();
+            icon.Text = glyph;
+            icon.FontFamily = new FontFamily("Segoe MDL2 Assets");
+            icon.FontSize = 12;
+            icon.Width = 22;
+            icon.VerticalAlignment = VerticalAlignment.Center;
+            icon.Foreground = selected ? SettingsTextBrush() : SettingsMutedTextBrush();
+            DockPanel.SetDock(icon, Dock.Left);
+            content.Children.Add(icon);
+
+            TextBlock text = new TextBlock();
+            text.Text = label;
+            text.FontSize = 12;
+            text.TextTrimming = TextTrimming.CharacterEllipsis;
+            text.VerticalAlignment = VerticalAlignment.Center;
+            text.Foreground = selected ? SettingsTextBrush() : SettingsMutedTextBrush();
+            content.Children.Add(text);
+
+            return item;
+        }
+
+        private Border BuildAboutPanel()
+        {
+            Border panel = new Border();
+            panel.Background = SettingsSidePanelBrush();
+            panel.BorderBrush = SettingsBorderBrush(52);
+            panel.BorderThickness = new Thickness(1);
+            panel.CornerRadius = new CornerRadius(8);
+            panel.Padding = new Thickness(14);
+            panel.SnapsToDevicePixels = false;
+
+            StackPanel stack = new StackPanel();
+            panel.Child = stack;
+
+            TextBlock title = new TextBlock();
+            title.Text = "PromptBar";
+            title.FontSize = 18;
+            title.FontWeight = FontWeights.SemiBold;
+            title.Foreground = SettingsTextBrush();
+            title.Margin = new Thickness(0, 0, 0, 4);
+            stack.Children.Add(title);
+
+            TextBlock version = new TextBlock();
+            version.Text = "Version " + AppVersionText();
+            version.FontSize = 12;
+            version.Foreground = SettingsMutedTextBrush();
+            version.Margin = new Thickness(0, 0, 0, 18);
+            stack.Children.Add(version);
+
+            stack.Children.Add(AboutLine("Design", "Windows Fluent, Mica, Aero blur"));
+            stack.Children.Add(AboutLine("Build", "Portable single-file exe"));
+            stack.Children.Add(AboutLine("Privacy", "Best-effort capture exclusion"));
+            stack.Children.Add(AboutLine("GitHub", "NEONARCHY/PromptBar"));
+
+            return panel;
+        }
+
+        private UIElement AboutLine(string label, string value)
+        {
+            StackPanel block = new StackPanel();
+            block.Margin = new Thickness(0, 0, 0, 13);
+
+            TextBlock labelBlock = new TextBlock();
+            labelBlock.Text = label;
+            labelBlock.FontSize = 11;
+            labelBlock.Foreground = SettingsMutedTextBrush();
+            labelBlock.Margin = new Thickness(0, 0, 0, 3);
+            block.Children.Add(labelBlock);
+
+            TextBlock valueBlock = new TextBlock();
+            valueBlock.Text = value;
+            valueBlock.FontSize = 12;
+            valueBlock.TextWrapping = TextWrapping.Wrap;
+            valueBlock.Foreground = SettingsTextBrush();
+            block.Children.Add(valueBlock);
+
+            return block;
+        }
+
+        private string AppVersionText()
+        {
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            if (version == null)
+            {
+                return "";
+            }
+
+            return version.Major.ToString(CultureInfo.InvariantCulture) + "." +
+                version.Minor.ToString(CultureInfo.InvariantCulture) + "." +
+                version.Build.ToString(CultureInfo.InvariantCulture);
         }
 
         private Button TitleBarButton(string label)
@@ -341,6 +484,17 @@ namespace PromptBar
             brush.GradientStops.Add(new GradientStop(Color.FromArgb(70, 255, 255, 255), 0));
             brush.GradientStops.Add(new GradientStop(Color.FromArgb(36, 178, 233, 196), 0.52));
             brush.GradientStops.Add(new GradientStop(Color.FromArgb(28, 255, 255, 255), 1));
+            return brush;
+        }
+
+        private Brush SettingsSidePanelBrush()
+        {
+            LinearGradientBrush brush = new LinearGradientBrush();
+            brush.StartPoint = new Point(0, 0);
+            brush.EndPoint = new Point(1, 1);
+            brush.GradientStops.Add(new GradientStop(Color.FromArgb(44, 255, 255, 255), 0));
+            brush.GradientStops.Add(new GradientStop(Color.FromArgb(24, 255, 255, 255), 0.48));
+            brush.GradientStops.Add(new GradientStop(Color.FromArgb(14, 0, 0, 0), 1));
             return brush;
         }
 
