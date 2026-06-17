@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 - 2026-06-17
+
+- Fixed a tiny visible top-edge gap by slightly bleeding the overlay above the screen edge.
+- Cleaned up Windows executable copyright metadata.
+
 ## 0.3.0 - 2026-06-17
 
 - Renamed the Windows app to PromptBar.

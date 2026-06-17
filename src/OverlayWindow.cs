@@ -15,6 +15,7 @@ namespace PromptBar
 {
     public sealed class OverlayWindow : Window
     {
+        private const double ScreenTopBleed = 2.0;
         private readonly PrompterModel model;
         private readonly Action showSettings;
         private readonly Action showHotkeyHelp;
@@ -88,7 +89,7 @@ namespace PromptBar
             double screenWidth = screen.Bounds.Width / scaleX;
 
             Left = Math.Round(screenLeft + ((screenWidth - Width) / 2.0));
-            Top = Math.Round(screenTop);
+            Top = Math.Floor(screenTop - ScreenTopBleed);
         }
 
         public void ApplyPrivacyMode()
