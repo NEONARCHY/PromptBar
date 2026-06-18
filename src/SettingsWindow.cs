@@ -13,6 +13,7 @@ using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using System.Windows.Threading;
 using Microsoft.Win32;
 
 namespace PromptBar
@@ -27,6 +28,9 @@ namespace PromptBar
         private bool allowClose;
         private ShortcutCommand? recordingHotkeyCommand;
         private SettingsPage selectedPage = SettingsPage.General;
+        private IntPtr handle;
+        private DispatcherTimer privacyModeRetryTimer;
+        private int privacyModeRetryCount;
         private TextBlock hotkeyCaptureHint;
 
         private ComboBox languageCombo;
@@ -59,9 +63,9 @@ namespace PromptBar
             Height = 720;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             WindowStyle = WindowStyle.None;
-            AllowsTransparency = true;
+            AllowsTransparency = false;
             ResizeMode = ResizeMode.NoResize;
-            Background = Brushes.Transparent;
+            Background = SettingsShellBrush();
             Topmost = true;
             FontFamily = new FontFamily(PrompterModel.DefaultFontFamilyName);
             UseLayoutRounding = false;
@@ -71,6 +75,7 @@ namespace PromptBar
 
             Content = BuildContent();
             SourceInitialized += SettingsWindowOnSourceInitialized;
+            SizeChanged += delegate { ApplyWindowShape(); };
             PreviewKeyDown += SettingsWindowOnPreviewKeyDown;
             model.PropertyChanged += ModelOnPropertyChanged;
             RefreshScreens();
@@ -88,12 +93,59 @@ namespace PromptBar
             Activate();
             Topmost = false;
             Topmost = true;
+            ApplyWindowShape();
+            ApplyPrivacyModeWithRetry();
         }
 
         private void SettingsWindowOnSourceInitialized(object sender, EventArgs e)
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
-            WindowBackdrop.ApplySettingsBackdrop(helper.Handle);
+            handle = helper.Handle;
+            WindowBackdrop.ApplySettingsBackdrop(handle);
+            ApplyWindowShape();
+            ApplyPrivacyModeWithRetry();
+        }
+
+        private void ApplyWindowShape()
+        {
+            WindowShaping.ApplyRoundedRegion(this, handle, 14.0);
+        }
+
+        private void ApplyPrivacyMode()
+        {
+            WindowCaptureProtection.Apply(handle, model.PrivacyModeEnabled);
+        }
+
+        private void ApplyPrivacyModeWithRetry()
+        {
+            ApplyPrivacyMode();
+
+            if (Dispatcher != null)
+            {
+                Dispatcher.BeginInvoke(new Action(ApplyPrivacyMode), DispatcherPriority.ApplicationIdle);
+            }
+
+            privacyModeRetryCount = 0;
+            if (privacyModeRetryTimer == null)
+            {
+                privacyModeRetryTimer = new DispatcherTimer();
+                privacyModeRetryTimer.Interval = TimeSpan.FromMilliseconds(180);
+                privacyModeRetryTimer.Tick += PrivacyModeRetryTimerOnTick;
+            }
+
+            privacyModeRetryTimer.Stop();
+            privacyModeRetryTimer.Start();
+        }
+
+        private void PrivacyModeRetryTimerOnTick(object sender, EventArgs e)
+        {
+            privacyModeRetryCount++;
+            ApplyPrivacyMode();
+
+            if (privacyModeRetryCount >= 3 && privacyModeRetryTimer != null)
+            {
+                privacyModeRetryTimer.Stop();
+            }
         }
 
         public void ReallyClose()
@@ -112,6 +164,11 @@ namespace PromptBar
             }
 
             model.PropertyChanged -= ModelOnPropertyChanged;
+            if (privacyModeRetryTimer != null)
+            {
+                privacyModeRetryTimer.Stop();
+            }
+
             base.OnClosing(e);
         }
 
@@ -248,6 +305,8 @@ namespace PromptBar
             Content = BuildContent();
             WindowInteropHelper helper = new WindowInteropHelper(this);
             WindowBackdrop.ApplySettingsBackdrop(helper.Handle);
+            ApplyWindowShape();
+            ApplyPrivacyModeWithRetry();
             RefreshScreens();
             RefreshFromModel();
         }
@@ -1344,6 +1403,8 @@ namespace PromptBar
             Content = BuildContent();
             WindowInteropHelper helper = new WindowInteropHelper(this);
             WindowBackdrop.ApplySettingsBackdrop(helper.Handle);
+            ApplyWindowShape();
+            ApplyPrivacyModeWithRetry();
             RefreshScreens();
             RefreshFromModel();
         }
@@ -1702,6 +1763,11 @@ namespace PromptBar
             {
                 RebuildForLanguage();
                 return;
+            }
+
+            if (e.PropertyName == "PrivacyModeEnabled")
+            {
+                ApplyPrivacyModeWithRetry();
             }
 
             RefreshFromModel();

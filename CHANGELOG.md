@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.6 - 2026-06-18
+
+- Restored screen-sharing capture protection by replacing WPF layered transparency with native window regions.
+- Reapplied capture exclusion after showing the overlay/settings windows and after window state changes.
+- Applied capture exclusion to the settings window when privacy mode is enabled.
+
 ## 0.6.5 - 2026-06-18
 
 - Made settings dropdown fields open from the full control surface instead of only the small arrow area.

@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
+using System.Windows.Threading;
 using Microsoft.Win32;
 using DrawingGraphics = System.Drawing.Graphics;
 
@@ -28,6 +29,8 @@ namespace PromptBar
         private bool isResizeMode;
         private bool isUpdatingInlineEditor;
         private IntPtr handle;
+        private DispatcherTimer privacyModeRetryTimer;
+        private int privacyModeRetryCount;
 
         public OverlayWindow(PrompterModel model, Action showSettings, Action showHotkeyHelp)
         {
@@ -38,8 +41,8 @@ namespace PromptBar
             Title = "PromptBar Overlay";
             WindowStyle = WindowStyle.None;
             ResizeMode = ResizeMode.NoResize;
-            AllowsTransparency = true;
-            Background = Brushes.Transparent;
+            AllowsTransparency = false;
+            Background = ShellBrush();
             ShowInTaskbar = false;
             ShowActivated = false;
             Topmost = true;
@@ -54,7 +57,13 @@ namespace PromptBar
             Content = BuildContent();
 
             SourceInitialized += OverlayWindowOnSourceInitialized;
-            Loaded += delegate { Reposition(); };
+            Loaded += delegate
+            {
+                Reposition();
+                ApplyWindowShape();
+                ApplyPrivacyModeWithRetry();
+            };
+            SizeChanged += delegate { ApplyWindowShape(); };
             model.PropertyChanged += ModelOnPropertyChanged;
             SystemEvents.DisplaySettingsChanged += SystemEventsOnDisplaySettingsChanged;
         }
@@ -67,6 +76,8 @@ namespace PromptBar
                 Show();
                 Topmost = false;
                 Topmost = true;
+                ApplyWindowShape();
+                ApplyPrivacyModeWithRetry();
             }
             else
             {
@@ -94,27 +105,16 @@ namespace PromptBar
 
         public void ApplyPrivacyMode()
         {
-            if (handle == IntPtr.Zero)
-            {
-                return;
-            }
-
-            if (model.PrivacyModeEnabled)
-            {
-                bool ok = NativeMethods.SetWindowDisplayAffinity(handle, NativeMethods.WDA_EXCLUDEFROMCAPTURE);
-                if (!ok)
-                {
-                    NativeMethods.SetWindowDisplayAffinity(handle, NativeMethods.WDA_MONITOR);
-                }
-            }
-            else
-            {
-                NativeMethods.SetWindowDisplayAffinity(handle, NativeMethods.WDA_NONE);
-            }
+            WindowCaptureProtection.Apply(handle, model.PrivacyModeEnabled);
         }
 
         protected override void OnClosed(EventArgs e)
         {
+            if (privacyModeRetryTimer != null)
+            {
+                privacyModeRetryTimer.Stop();
+            }
+
             SystemEvents.DisplaySettingsChanged -= SystemEventsOnDisplaySettingsChanged;
             model.PropertyChanged -= ModelOnPropertyChanged;
             base.OnClosed(e);
@@ -789,7 +789,8 @@ namespace PromptBar
             style = style | NativeMethods.WS_EX_TOOLWINDOW;
             NativeMethods.SetWindowLong(handle, NativeMethods.GWL_EXSTYLE, style);
 
-            ApplyPrivacyMode();
+            ApplyWindowShape();
+            ApplyPrivacyModeWithRetry();
         }
 
         private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -800,13 +801,15 @@ namespace PromptBar
             }
             else if (e.PropertyName == "PrivacyModeEnabled")
             {
-                ApplyPrivacyMode();
+                ApplyPrivacyModeWithRetry();
             }
             else if (e.PropertyName == "OverlayWidth" ||
                      e.PropertyName == "OverlayHeight" ||
                      e.PropertyName == "SelectedScreenDeviceName")
             {
                 Reposition();
+                ApplyWindowShape();
+                ApplyPrivacyModeWithRetry();
             }
             else if (e.PropertyName == "IsRunning")
             {
@@ -844,6 +847,45 @@ namespace PromptBar
         private void SystemEventsOnDisplaySettingsChanged(object sender, EventArgs e)
         {
             Reposition();
+            ApplyWindowShape();
+            ApplyPrivacyModeWithRetry();
+        }
+
+        private void ApplyWindowShape()
+        {
+            WindowShaping.ApplyBottomRoundedRegion(this, handle, 36.0);
+        }
+
+        private void ApplyPrivacyModeWithRetry()
+        {
+            ApplyPrivacyMode();
+
+            if (Dispatcher != null)
+            {
+                Dispatcher.BeginInvoke(new Action(ApplyPrivacyMode), DispatcherPriority.ApplicationIdle);
+            }
+
+            privacyModeRetryCount = 0;
+            if (privacyModeRetryTimer == null)
+            {
+                privacyModeRetryTimer = new DispatcherTimer();
+                privacyModeRetryTimer.Interval = TimeSpan.FromMilliseconds(180);
+                privacyModeRetryTimer.Tick += PrivacyModeRetryTimerOnTick;
+            }
+
+            privacyModeRetryTimer.Stop();
+            privacyModeRetryTimer.Start();
+        }
+
+        private void PrivacyModeRetryTimerOnTick(object sender, EventArgs e)
+        {
+            privacyModeRetryCount++;
+            ApplyPrivacyMode();
+
+            if (privacyModeRetryCount >= 3 && privacyModeRetryTimer != null)
+            {
+                privacyModeRetryTimer.Stop();
+            }
         }
 
         private System.Windows.Forms.Screen ResolveTargetScreen()

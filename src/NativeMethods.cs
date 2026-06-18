@@ -13,6 +13,7 @@ namespace PromptBar
         public const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
         public const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
         public const int DWM_BB_ENABLE = 0x00000001;
+        public const int RGN_OR = 2;
 
         public const int WM_HOTKEY = 0x0312;
         public const uint MOD_ALT = 0x0001;
@@ -54,11 +55,26 @@ namespace PromptBar
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern bool SetWindowDisplayAffinity(IntPtr hwnd, uint dwAffinity);
 
         [DllImport("user32.dll")]
         public static extern bool SetProcessDPIAware();
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int SetWindowRgn(IntPtr hWnd, IntPtr hRgn, bool bRedraw);
+
+        [DllImport("gdi32.dll", SetLastError = true)]
+        public static extern IntPtr CreateRectRgn(int left, int top, int right, int bottom);
+
+        [DllImport("gdi32.dll", SetLastError = true)]
+        public static extern IntPtr CreateRoundRectRgn(int left, int top, int right, int bottom, int widthEllipse, int heightEllipse);
+
+        [DllImport("gdi32.dll", SetLastError = true)]
+        public static extern int CombineRgn(IntPtr destination, IntPtr source1, IntPtr source2, int combineMode);
+
+        [DllImport("gdi32.dll", SetLastError = true)]
+        public static extern bool DeleteObject(IntPtr hObject);
 
         [DllImport("user32.dll")]
         public static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
