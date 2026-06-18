@@ -26,6 +26,7 @@ namespace PromptBar
         private bool updating;
         private bool allowClose;
         private ShortcutCommand? recordingHotkeyCommand;
+        private SettingsPage selectedPage = SettingsPage.General;
         private TextBlock hotkeyCaptureHint;
 
         private ComboBox languageCombo;
@@ -116,6 +117,7 @@ namespace PromptBar
 
         private UIElement BuildContent()
         {
+            ResetPageControlReferences();
             Title = T("SettingsWindowTitle");
 
             Border shell = new Border();
@@ -161,19 +163,86 @@ namespace PromptBar
             root.Margin = new Thickness(0);
             scrollViewer.Content = root;
 
-            root.Children.Add(BuildGeneralSection());
-            root.Children.Add(BuildScriptSection());
-            root.Children.Add(BuildPlaybackSection());
-            root.Children.Add(BuildAppearanceSection());
-            root.Children.Add(BuildDisplaySection());
-            root.Children.Add(BuildPrivacySection());
-            root.Children.Add(BuildShortcutsSection());
+            root.Children.Add(BuildSelectedSection());
 
             Border aboutPanel = BuildAboutPanel();
             Grid.SetColumn(aboutPanel, 2);
             body.Children.Add(aboutPanel);
 
             return shell;
+        }
+
+        private void ResetPageControlReferences()
+        {
+            languageCombo = null;
+            scriptBox = null;
+            readDurationText = null;
+            speedSlider = null;
+            speedValue = null;
+            scrollModeCombo = null;
+            fontFamilyCombo = null;
+            fontSizeSlider = null;
+            fontSizeValue = null;
+            widthSlider = null;
+            widthValue = null;
+            heightSlider = null;
+            heightValue = null;
+            screenCombo = null;
+            showOverlayCheck = null;
+            privacyCheck = null;
+            hotkeyCaptureHint = null;
+            hotkeyButtons.Clear();
+        }
+
+        private UIElement BuildSelectedSection()
+        {
+            if (selectedPage == SettingsPage.Script)
+            {
+                return BuildScriptSection();
+            }
+
+            if (selectedPage == SettingsPage.Playback)
+            {
+                return BuildPlaybackSection();
+            }
+
+            if (selectedPage == SettingsPage.Appearance)
+            {
+                return BuildAppearanceSection();
+            }
+
+            if (selectedPage == SettingsPage.Display)
+            {
+                return BuildDisplaySection();
+            }
+
+            if (selectedPage == SettingsPage.Privacy)
+            {
+                return BuildPrivacySection();
+            }
+
+            if (selectedPage == SettingsPage.Shortcuts)
+            {
+                return BuildShortcutsSection();
+            }
+
+            return BuildGeneralSection();
+        }
+
+        private void SelectPage(SettingsPage page)
+        {
+            if (selectedPage == page)
+            {
+                return;
+            }
+
+            selectedPage = page;
+            recordingHotkeyCommand = null;
+            Content = BuildContent();
+            WindowInteropHelper helper = new WindowInteropHelper(this);
+            WindowBackdrop.ApplySettingsBackdrop(helper.Handle);
+            RefreshScreens();
+            RefreshFromModel();
         }
 
         private DockPanel BuildTitleBar()
@@ -233,34 +302,22 @@ namespace PromptBar
             StackPanel rail = new StackPanel();
             rail.Margin = new Thickness(0, 0, 0, 0);
 
-            rail.Children.Add(NavigationItem("\uE713", T("GeneralSection"), true));
-            rail.Children.Add(NavigationItem("\uE8A5", T("ScriptSection"), false));
-            rail.Children.Add(NavigationItem("\uE768", T("PlaybackSection"), false));
-            rail.Children.Add(NavigationItem("\uE771", T("AppearanceSection"), false));
-            rail.Children.Add(NavigationItem("\uE7F4", T("DisplaySection"), false));
-            rail.Children.Add(NavigationItem("\uE72E", T("PrivacySection"), false));
-            rail.Children.Add(NavigationItem("\uE765", T("ShortcutsSection"), false));
+            rail.Children.Add(NavigationItem(SettingsPage.General, "\uE713", T("GeneralSection")));
+            rail.Children.Add(NavigationItem(SettingsPage.Script, "\uE8A5", T("ScriptSection")));
+            rail.Children.Add(NavigationItem(SettingsPage.Playback, "\uE768", T("PlaybackSection")));
+            rail.Children.Add(NavigationItem(SettingsPage.Appearance, "\uE771", T("AppearanceSection")));
+            rail.Children.Add(NavigationItem(SettingsPage.Display, "\uE7F4", T("DisplaySection")));
+            rail.Children.Add(NavigationItem(SettingsPage.Privacy, "\uE72E", T("PrivacySection")));
+            rail.Children.Add(NavigationItem(SettingsPage.Shortcuts, "\uE765", T("ShortcutsSection")));
 
             return rail;
         }
 
-        private Border NavigationItem(string glyph, string label, bool selected)
+        private Button NavigationItem(SettingsPage page, string glyph, string label)
         {
-            Border item = new Border();
-            item.Height = 34;
-            item.Margin = new Thickness(0, 0, 0, 5);
-            item.Padding = new Thickness(10, 0, 10, 0);
-            item.CornerRadius = new CornerRadius(7);
-            item.Background = selected
-                ? new SolidColorBrush(Color.FromArgb(30, 255, 255, 255))
-                : Brushes.Transparent;
-            item.BorderBrush = selected ? SettingsBorderBrush(20) : Brushes.Transparent;
-            item.BorderThickness = new Thickness(1);
-            item.SnapsToDevicePixels = false;
-
+            bool selected = selectedPage == page;
             DockPanel content = new DockPanel();
             content.LastChildFill = true;
-            item.Child = content;
 
             TextBlock icon = new TextBlock();
             icon.Text = glyph;
@@ -279,6 +336,24 @@ namespace PromptBar
             text.VerticalAlignment = VerticalAlignment.Center;
             text.Foreground = selected ? SettingsTextBrush() : SettingsMutedTextBrush();
             content.Children.Add(text);
+
+            Button item = new Button();
+            item.Content = content;
+            item.Height = 34;
+            item.Margin = new Thickness(0, 0, 0, 5);
+            item.Padding = new Thickness(10, 0, 10, 0);
+            item.HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            item.VerticalContentAlignment = VerticalAlignment.Center;
+            item.Background = selected
+                ? new SolidColorBrush(Color.FromArgb(30, 255, 255, 255))
+                : Brushes.Transparent;
+            item.BorderBrush = selected ? SettingsBorderBrush(20) : Brushes.Transparent;
+            item.BorderThickness = new Thickness(1);
+            item.Foreground = selected ? SettingsTextBrush() : SettingsMutedTextBrush();
+            item.Cursor = Cursors.Hand;
+            item.FocusVisualStyle = null;
+            item.Style = SettingsNavigationButtonStyle();
+            item.Click += delegate { SelectPage(page); };
 
             return item;
         }
@@ -538,6 +613,51 @@ namespace PromptBar
         private Style SettingsRoundButtonStyle()
         {
             return SettingsButtonStyleFor(typeof(Button), new CornerRadius(14));
+        }
+
+        private Style SettingsNavigationButtonStyle()
+        {
+            Style style = new Style(typeof(Button));
+            style.Setters.Add(new Setter(Control.ForegroundProperty, SettingsMutedTextBrush()));
+            style.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
+            style.Setters.Add(new Setter(Control.BorderBrushProperty, Brushes.Transparent));
+            style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1)));
+            style.Setters.Add(new Setter(Control.FocusVisualStyleProperty, null));
+
+            FrameworkElementFactory chrome = new FrameworkElementFactory(typeof(Border));
+            chrome.Name = "Chrome";
+            chrome.SetValue(Border.CornerRadiusProperty, new CornerRadius(7));
+            chrome.SetValue(Border.BackgroundProperty, new TemplateBindingExtension(Control.BackgroundProperty));
+            chrome.SetValue(Border.BorderBrushProperty, new TemplateBindingExtension(Control.BorderBrushProperty));
+            chrome.SetValue(Border.BorderThicknessProperty, new TemplateBindingExtension(Control.BorderThicknessProperty));
+            chrome.SetValue(Border.PaddingProperty, new TemplateBindingExtension(Control.PaddingProperty));
+            chrome.SetValue(UIElement.SnapsToDevicePixelsProperty, false);
+
+            FrameworkElementFactory presenter = new FrameworkElementFactory(typeof(ContentPresenter));
+            presenter.SetValue(ContentPresenter.ContentProperty, new TemplateBindingExtension(ContentControl.ContentProperty));
+            presenter.SetValue(ContentPresenter.HorizontalAlignmentProperty, new TemplateBindingExtension(Control.HorizontalContentAlignmentProperty));
+            presenter.SetValue(ContentPresenter.VerticalAlignmentProperty, new TemplateBindingExtension(Control.VerticalContentAlignmentProperty));
+            chrome.AppendChild(presenter);
+
+            ControlTemplate template = new ControlTemplate(typeof(Button));
+            template.VisualTree = chrome;
+
+            Trigger hover = new Trigger();
+            hover.Property = UIElement.IsMouseOverProperty;
+            hover.Value = true;
+            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(18, 255, 255, 255)), "Chrome"));
+            hover.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(16), "Chrome"));
+            template.Triggers.Add(hover);
+
+            Trigger pressed = new Trigger();
+            pressed.Property = ButtonBase.IsPressedProperty;
+            pressed.Value = true;
+            pressed.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(26, 255, 255, 255)), "Chrome"));
+            pressed.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(22), "Chrome"));
+            template.Triggers.Add(pressed);
+
+            style.Setters.Add(new Setter(Control.TemplateProperty, template));
+            return style;
         }
 
         private Style SettingsButtonStyleFor(Type targetType, CornerRadius radius)
@@ -1360,22 +1480,52 @@ namespace PromptBar
             updating = true;
 
             SelectLanguageChoice(model.LanguageCode);
-            if (scriptBox.Text != model.Script)
+            if (scriptBox != null && scriptBox.Text != model.Script)
             {
                 scriptBox.Text = model.Script;
             }
-            speedSlider.Value = model.SpeedPointsPerSecond;
-            speedValue.Text = ((int)model.SpeedPointsPerSecond).ToString(CultureInfo.InvariantCulture);
+            if (speedSlider != null)
+            {
+                speedSlider.Value = model.SpeedPointsPerSecond;
+            }
+            if (speedValue != null)
+            {
+                speedValue.Text = ((int)model.SpeedPointsPerSecond).ToString(CultureInfo.InvariantCulture);
+            }
             SelectChoice(scrollModeCombo, model.ScrollMode);
             SelectFontChoice(model.FontFamilyName);
-            fontSizeSlider.Value = model.FontSize;
-            fontSizeValue.Text = ((int)model.FontSize).ToString(CultureInfo.InvariantCulture);
-            widthSlider.Value = model.OverlayWidth;
-            widthValue.Text = ((int)model.OverlayWidth).ToString(CultureInfo.InvariantCulture);
-            heightSlider.Value = model.OverlayHeight;
-            heightValue.Text = ((int)model.OverlayHeight).ToString(CultureInfo.InvariantCulture);
-            showOverlayCheck.IsChecked = model.IsOverlayVisible;
-            privacyCheck.IsChecked = model.PrivacyModeEnabled;
+            if (fontSizeSlider != null)
+            {
+                fontSizeSlider.Value = model.FontSize;
+            }
+            if (fontSizeValue != null)
+            {
+                fontSizeValue.Text = ((int)model.FontSize).ToString(CultureInfo.InvariantCulture);
+            }
+            if (widthSlider != null)
+            {
+                widthSlider.Value = model.OverlayWidth;
+            }
+            if (widthValue != null)
+            {
+                widthValue.Text = ((int)model.OverlayWidth).ToString(CultureInfo.InvariantCulture);
+            }
+            if (heightSlider != null)
+            {
+                heightSlider.Value = model.OverlayHeight;
+            }
+            if (heightValue != null)
+            {
+                heightValue.Text = ((int)model.OverlayHeight).ToString(CultureInfo.InvariantCulture);
+            }
+            if (showOverlayCheck != null)
+            {
+                showOverlayCheck.IsChecked = model.IsOverlayVisible;
+            }
+            if (privacyCheck != null)
+            {
+                privacyCheck.IsChecked = model.PrivacyModeEnabled;
+            }
             SelectScreenChoice(model.SelectedScreenDeviceName);
             UpdateReadDuration();
             RefreshHotkeyButtons();
@@ -1409,6 +1559,11 @@ namespace PromptBar
 
         private void SelectScreenChoice(string deviceName)
         {
+            if (screenCombo == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < screenCombo.Items.Count; i++)
             {
                 ScreenChoice choice = screenCombo.Items[i] as ScreenChoice;
@@ -1424,6 +1579,11 @@ namespace PromptBar
 
         private void SelectChoice(ComboBox comboBox, object value)
         {
+            if (comboBox == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < comboBox.Items.Count; i++)
             {
                 Choice choice = comboBox.Items[i] as Choice;
@@ -1442,6 +1602,11 @@ namespace PromptBar
 
         private void SelectFontChoice(string fontFamilyName)
         {
+            if (fontFamilyCombo == null)
+            {
+                return;
+            }
+
             if (String.IsNullOrWhiteSpace(fontFamilyName))
             {
                 fontFamilyName = PrompterModel.DefaultFontFamilyName;
@@ -1502,6 +1667,11 @@ namespace PromptBar
 
         private void UpdateReadDuration()
         {
+            if (readDurationText == null)
+            {
+                return;
+            }
+
             TimeSpan duration = model.EstimatedReadDuration;
             if (duration.TotalSeconds < 60)
             {
@@ -1785,6 +1955,17 @@ namespace PromptBar
             {
                 hotkeysChanged();
             }
+        }
+
+        private enum SettingsPage
+        {
+            General,
+            Script,
+            Playback,
+            Appearance,
+            Display,
+            Privacy,
+            Shortcuts
         }
 
         private sealed class ScreenChoice

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1 - 2026-06-18
+
+- Made the settings navigation rail clickable.
+- Split settings into real pages instead of showing every section inside General.
+- Added safer per-page refresh logic for settings controls.
+
 ## 0.6.0 - 2026-06-18
 
 - Reworked the settings window toward a calmer native Windows 11 Fluent style.
