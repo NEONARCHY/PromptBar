@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.3 - 2026-06-18
+
+- Removed the native DWM/backdrop fill from the floating overlay so transparent rounded corners are preserved.
+
 ## 0.6.2 - 2026-06-18
 
 - Rounded the floating overlay shell on all corners.

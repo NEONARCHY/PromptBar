@@ -784,7 +784,6 @@ namespace PromptBar
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
             handle = helper.Handle;
-            WindowBackdrop.ApplyOverlayBackdrop(handle);
 
             int style = NativeMethods.GetWindowLong(handle, NativeMethods.GWL_EXSTYLE);
             style = style | NativeMethods.WS_EX_TOOLWINDOW;
