@@ -61,7 +61,7 @@ namespace PromptBar
             WindowStyle = WindowStyle.None;
             AllowsTransparency = false;
             ResizeMode = ResizeMode.NoResize;
-            Background = new SolidColorBrush(Color.FromRgb(31, 33, 42));
+            Background = new SolidColorBrush(Color.FromRgb(16, 17, 23));
             Topmost = true;
             FontFamily = new FontFamily(PrompterModel.DefaultFontFamilyName);
             UseLayoutRounding = false;
@@ -124,7 +124,7 @@ namespace PromptBar
             CornerRadius shellRadius = new CornerRadius(8);
             shell.CornerRadius = shellRadius;
             shell.Background = SettingsShellBrush();
-            shell.BorderBrush = SettingsBorderBrush(28);
+            shell.BorderBrush = SettingsBorderBrush(20);
             shell.BorderThickness = new Thickness(1);
             shell.SnapsToDevicePixels = false;
 
@@ -345,9 +345,9 @@ namespace PromptBar
             item.HorizontalContentAlignment = HorizontalAlignment.Stretch;
             item.VerticalContentAlignment = VerticalAlignment.Center;
             item.Background = selected
-                ? new SolidColorBrush(Color.FromArgb(30, 255, 255, 255))
+                ? new SolidColorBrush(Color.FromArgb(22, 255, 255, 255))
                 : Brushes.Transparent;
-            item.BorderBrush = selected ? SettingsBorderBrush(20) : Brushes.Transparent;
+            item.BorderBrush = selected ? SettingsBorderBrush(14) : Brushes.Transparent;
             item.BorderThickness = new Thickness(1);
             item.Foreground = selected ? SettingsTextBrush() : SettingsMutedTextBrush();
             item.Cursor = Cursors.Hand;
@@ -362,7 +362,7 @@ namespace PromptBar
         {
             Border panel = new Border();
             panel.Background = SettingsSidePanelBrush();
-            panel.BorderBrush = SettingsBorderBrush(22);
+            panel.BorderBrush = SettingsBorderBrush(16);
             panel.BorderThickness = new Thickness(1);
             panel.CornerRadius = new CornerRadius(8);
             panel.Padding = new Thickness(14);
@@ -439,7 +439,7 @@ namespace PromptBar
             button.Padding = new Thickness(0);
             button.Foreground = SettingsTextBrush();
             button.Background = SettingsButtonBrush();
-            button.BorderBrush = SettingsBorderBrush(24);
+            button.BorderBrush = SettingsBorderBrush(18);
             button.Cursor = Cursors.Hand;
             button.FocusVisualStyle = null;
             button.Style = SettingsRoundButtonStyle();
@@ -452,7 +452,7 @@ namespace PromptBar
             button.Padding = new Thickness(12, 5, 12, 6);
             button.Foreground = SettingsTextBrush();
             button.Background = SettingsButtonBrush();
-            button.BorderBrush = SettingsBorderBrush(28);
+            button.BorderBrush = SettingsBorderBrush(20);
             button.FocusVisualStyle = null;
             button.Cursor = Cursors.Hand;
             button.Style = SettingsButtonStyle();
@@ -463,7 +463,7 @@ namespace PromptBar
             textBox.Padding = new Thickness(12, 10, 12, 10);
             textBox.Foreground = SettingsTextBrush();
             textBox.Background = SettingsInputBrush();
-            textBox.BorderBrush = SettingsBorderBrush(30);
+            textBox.BorderBrush = SettingsBorderBrush(22);
             textBox.BorderThickness = new Thickness(1);
             textBox.CaretBrush = Brushes.White;
             textBox.SelectionBrush = new SolidColorBrush(Color.FromArgb(120, 76, 194, 255));
@@ -477,7 +477,7 @@ namespace PromptBar
             comboBox.Padding = new Thickness(8, 3, 8, 3);
             comboBox.Foreground = SettingsTextBrush();
             comboBox.Background = SettingsInputBrush();
-            comboBox.BorderBrush = SettingsBorderBrush(30);
+            comboBox.BorderBrush = SettingsBorderBrush(22);
             comboBox.FocusVisualStyle = null;
             comboBox.Resources[SystemColors.WindowBrushKey] = SettingsSectionBrush();
             comboBox.Resources[SystemColors.ControlBrushKey] = SettingsInputBrush();
@@ -498,8 +498,8 @@ namespace PromptBar
         private Brush SettingsShellBrush()
         {
             return WindowBackdrop.UseWindows11VisualStyle
-                ? new SolidColorBrush(Color.FromRgb(31, 33, 42))
-                : new SolidColorBrush(Color.FromRgb(27, 29, 36));
+                ? new SolidColorBrush(Color.FromRgb(17, 18, 24))
+                : new SolidColorBrush(Color.FromRgb(13, 14, 20));
         }
 
         private Brush SettingsAeroWashBrush()
@@ -528,25 +528,25 @@ namespace PromptBar
         private Brush SettingsSectionBrush()
         {
             return WindowBackdrop.UseWindows11VisualStyle
-                ? new SolidColorBrush(Color.FromRgb(42, 44, 54))
-                : new SolidColorBrush(Color.FromRgb(38, 40, 49));
+                ? new SolidColorBrush(Color.FromRgb(27, 29, 37))
+                : new SolidColorBrush(Color.FromRgb(24, 26, 33));
         }
 
         private Brush SettingsSidePanelBrush()
         {
             return WindowBackdrop.UseWindows11VisualStyle
-                ? new SolidColorBrush(Color.FromRgb(35, 37, 46))
-                : new SolidColorBrush(Color.FromRgb(31, 33, 41));
+                ? new SolidColorBrush(Color.FromRgb(22, 24, 31))
+                : new SolidColorBrush(Color.FromRgb(19, 21, 28));
         }
 
         private Brush SettingsInputBrush()
         {
-            return new SolidColorBrush(Color.FromRgb(30, 32, 40));
+            return new SolidColorBrush(Color.FromRgb(18, 20, 27));
         }
 
         private Brush SettingsButtonBrush()
         {
-            return new SolidColorBrush(Color.FromRgb(57, 59, 70));
+            return new SolidColorBrush(Color.FromRgb(36, 38, 48));
         }
 
         private SolidColorBrush SettingsTextBrush()
@@ -645,15 +645,15 @@ namespace PromptBar
             Trigger hover = new Trigger();
             hover.Property = UIElement.IsMouseOverProperty;
             hover.Value = true;
-            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(18, 255, 255, 255)), "Chrome"));
-            hover.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(16), "Chrome"));
+            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(14, 255, 255, 255)), "Chrome"));
+            hover.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(14), "Chrome"));
             template.Triggers.Add(hover);
 
             Trigger pressed = new Trigger();
             pressed.Property = ButtonBase.IsPressedProperty;
             pressed.Value = true;
-            pressed.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(26, 255, 255, 255)), "Chrome"));
-            pressed.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(22), "Chrome"));
+            pressed.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(20, 255, 255, 255)), "Chrome"));
+            pressed.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(18), "Chrome"));
             template.Triggers.Add(pressed);
 
             style.Setters.Add(new Setter(Control.TemplateProperty, template));
@@ -665,7 +665,7 @@ namespace PromptBar
             Style style = new Style(targetType);
             style.Setters.Add(new Setter(Control.ForegroundProperty, SettingsTextBrush()));
             style.Setters.Add(new Setter(Control.BackgroundProperty, SettingsButtonBrush()));
-            style.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(28)));
+            style.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(20)));
             style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1)));
             style.Setters.Add(new Setter(Control.FocusVisualStyleProperty, null));
 
@@ -691,15 +691,15 @@ namespace PromptBar
             Trigger hover = new Trigger();
             hover.Property = UIElement.IsMouseOverProperty;
             hover.Value = true;
-            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(48, 255, 255, 255)), "Chrome"));
-            hover.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(44), "Chrome"));
+            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(30, 255, 255, 255)), "Chrome"));
+            hover.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(32), "Chrome"));
             template.Triggers.Add(hover);
 
             Trigger pressed = new Trigger();
             pressed.Property = ButtonBase.IsPressedProperty;
             pressed.Value = true;
-            pressed.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(34, 76, 194, 255)), "Chrome"));
-            pressed.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(58), "Chrome"));
+            pressed.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(28, 76, 194, 255)), "Chrome"));
+            pressed.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(42), "Chrome"));
             template.Triggers.Add(pressed);
 
             style.Setters.Add(new Setter(Control.TemplateProperty, template));
@@ -711,7 +711,7 @@ namespace PromptBar
             Style style = new Style(typeof(TextBox));
             style.Setters.Add(new Setter(Control.ForegroundProperty, SettingsTextBrush()));
             style.Setters.Add(new Setter(Control.BackgroundProperty, SettingsInputBrush()));
-            style.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(30)));
+            style.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(22)));
             style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1)));
             style.Setters.Add(new Setter(Control.FocusVisualStyleProperty, null));
 
@@ -747,7 +747,7 @@ namespace PromptBar
             Style style = new Style(typeof(ComboBox));
             style.Setters.Add(new Setter(Control.ForegroundProperty, SettingsTextBrush()));
             style.Setters.Add(new Setter(Control.BackgroundProperty, SettingsInputBrush()));
-            style.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(30)));
+            style.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(22)));
             style.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1)));
             style.Setters.Add(new Setter(Control.FocusVisualStyleProperty, null));
             style.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Left));
@@ -813,8 +813,8 @@ namespace PromptBar
             FrameworkElementFactory dropBorder = new FrameworkElementFactory(typeof(Border));
             dropBorder.Name = "DropDownBorder";
             dropBorder.SetValue(Border.CornerRadiusProperty, new CornerRadius(8));
-            dropBorder.SetValue(Border.BackgroundProperty, new SolidColorBrush(Color.FromArgb(250, 38, 40, 50)));
-            dropBorder.SetValue(Border.BorderBrushProperty, SettingsBorderBrush(40));
+            dropBorder.SetValue(Border.BackgroundProperty, new SolidColorBrush(Color.FromArgb(252, 25, 27, 35)));
+            dropBorder.SetValue(Border.BorderBrushProperty, SettingsBorderBrush(26));
             dropBorder.SetValue(Border.BorderThicknessProperty, new Thickness(1));
             dropBorder.SetBinding(FrameworkElement.MinWidthProperty, new Binding("ActualWidth")
             {
@@ -837,7 +837,7 @@ namespace PromptBar
             Trigger hover = new Trigger();
             hover.Property = UIElement.IsMouseOverProperty;
             hover.Value = true;
-            hover.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(46), "ComboChrome"));
+            hover.Setters.Add(new Setter(Control.BorderBrushProperty, SettingsBorderBrush(32), "ComboChrome"));
             template.Triggers.Add(hover);
 
             Trigger focused = new Trigger();
@@ -894,7 +894,7 @@ namespace PromptBar
             Trigger hover = new Trigger();
             hover.Property = UIElement.IsMouseOverProperty;
             hover.Value = true;
-            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(46, 255, 255, 255)), "ItemChrome"));
+            hover.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromArgb(30, 255, 255, 255)), "ItemChrome"));
             template.Triggers.Add(hover);
 
             Trigger selected = new Trigger();
@@ -924,7 +924,7 @@ namespace PromptBar
             switchBorder.SetValue(FrameworkElement.HeightProperty, 22.0);
             switchBorder.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
             switchBorder.SetValue(Border.CornerRadiusProperty, new CornerRadius(11));
-            switchBorder.SetValue(Border.BackgroundProperty, new SolidColorBrush(Color.FromArgb(68, 255, 255, 255)));
+            switchBorder.SetValue(Border.BackgroundProperty, new SolidColorBrush(Color.FromArgb(42, 255, 255, 255)));
             switchBorder.SetValue(Border.BorderBrushProperty, SettingsBorderBrush(72));
             switchBorder.SetValue(Border.BorderThicknessProperty, new Thickness(1));
 

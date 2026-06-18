@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.2 - 2026-06-18
+
+- Rounded the floating overlay shell on all corners.
+- Darkened the overlay, settings window, cards, inputs, and controls for a deeper UI tone.
+
 ## 0.6.1 - 2026-06-18
 
 - Made the settings navigation rail clickable.
