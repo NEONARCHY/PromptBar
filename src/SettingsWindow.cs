@@ -772,6 +772,24 @@ namespace PromptBar
             chrome.SetValue(UIElement.SnapsToDevicePixelsProperty, false);
             grid.AppendChild(chrome);
 
+            FrameworkElementFactory arrow = new FrameworkElementFactory(typeof(ToggleButton));
+            arrow.Name = "DropDownToggle";
+            arrow.SetValue(Control.FocusVisualStyleProperty, null);
+            arrow.SetValue(Control.BorderThicknessProperty, new Thickness(0));
+            arrow.SetValue(Control.BackgroundProperty, Brushes.Transparent);
+            arrow.SetValue(Control.ForegroundProperty, SettingsMutedTextBrush());
+            arrow.SetValue(ToggleButton.ClickModeProperty, ClickMode.Press);
+            arrow.SetValue(UIElement.FocusableProperty, false);
+            arrow.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Stretch);
+            arrow.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Stretch);
+            arrow.SetBinding(ToggleButton.IsCheckedProperty, new Binding("IsDropDownOpen")
+            {
+                RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent),
+                Mode = BindingMode.TwoWay
+            });
+            arrow.SetValue(Control.TemplateProperty, ComboArrowTemplate());
+            grid.AppendChild(arrow);
+
             FrameworkElementFactory content = new FrameworkElementFactory(typeof(ContentPresenter));
             content.Name = "ContentSite";
             content.SetValue(ContentPresenter.ContentProperty, new TemplateBindingExtension(ComboBox.SelectionBoxItemProperty));
@@ -783,30 +801,12 @@ namespace PromptBar
             content.SetValue(UIElement.IsHitTestVisibleProperty, false);
             grid.AppendChild(content);
 
-            FrameworkElementFactory arrow = new FrameworkElementFactory(typeof(ToggleButton));
-            arrow.Name = "DropDownToggle";
-            arrow.SetValue(Control.FocusVisualStyleProperty, null);
-            arrow.SetValue(Control.BorderThicknessProperty, new Thickness(0));
-            arrow.SetValue(Control.BackgroundProperty, Brushes.Transparent);
-            arrow.SetValue(Control.ForegroundProperty, SettingsMutedTextBrush());
-            arrow.SetValue(ToggleButton.ClickModeProperty, ClickMode.Press);
-            arrow.SetValue(UIElement.FocusableProperty, false);
-            arrow.SetValue(FrameworkElement.WidthProperty, 30.0);
-            arrow.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Right);
-            arrow.SetBinding(ToggleButton.IsCheckedProperty, new Binding("IsDropDownOpen")
-            {
-                RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent),
-                Mode = BindingMode.TwoWay
-            });
-            arrow.SetValue(Control.TemplateProperty, ComboArrowTemplate());
-            grid.AppendChild(arrow);
-
             FrameworkElementFactory popup = new FrameworkElementFactory(typeof(Popup));
             popup.Name = "PART_Popup";
             popup.SetValue(Popup.PlacementProperty, PlacementMode.Bottom);
             popup.SetValue(Popup.AllowsTransparencyProperty, true);
             popup.SetValue(UIElement.FocusableProperty, false);
-            popup.SetValue(Popup.PopupAnimationProperty, PopupAnimation.Fade);
+            popup.SetValue(Popup.PopupAnimationProperty, PopupAnimation.None);
             popup.SetBinding(Popup.IsOpenProperty, new Binding("IsDropDownOpen")
             {
                 RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent),
@@ -867,8 +867,9 @@ namespace PromptBar
             text.SetValue(TextBlock.FontSizeProperty, 10.0);
             text.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold);
             text.SetValue(TextBlock.ForegroundProperty, SettingsMutedTextBrush());
-            text.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            text.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Right);
             text.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+            text.SetValue(FrameworkElement.MarginProperty, new Thickness(0, 0, 11, 0));
             border.AppendChild(text);
 
             ControlTemplate template = new ControlTemplate(typeof(ToggleButton));

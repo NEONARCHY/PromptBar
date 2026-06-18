@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.5 - 2026-06-18
+
+- Made settings dropdown fields open from the full control surface instead of only the small arrow area.
+- Removed dropdown fade animation for more immediate response.
+
 ## 0.6.4 - 2026-06-18
 
 - Restored transparent rounded corners for the settings window shell.
