@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 - 2026-06-18
+
+- Reworked the settings window toward a calmer native Windows 11 Fluent style.
+- Added separate portable builds for automatic, Windows 11, and Windows 10 visual modes.
+- Made settings rendering stable by avoiding fragile transparent WPF/DWM composition for the main app window.
+- Kept safe DWM dark mode and rounded-corner integration for the settings window.
+
 ## 0.5.0 - 2026-06-17
 
 - Moved settings to a fuller Windows Fluent style layout with navigation rail, central setting cards, and an about panel.

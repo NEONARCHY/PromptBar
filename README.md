@@ -10,10 +10,16 @@ Download the latest `PromptBarPortable.exe` from GitHub Releases.
 
 The app is portable: no installer and no companion files are required.
 
+Release builds:
+
+- `PromptBarPortable.exe` chooses the Windows 10/11 visual mode automatically.
+- `PromptBar-Windows11.exe` forces the Windows 11 Fluent-style mode.
+- `PromptBar-Windows10.exe` forces the Windows 10 fallback mode.
+
 ## Features
 
 - Compact top-center teleprompter overlay.
-- Liquid/glass inspired dark interface.
+- Windows Fluent-inspired dark interface.
 - Inline text editing directly inside the overlay.
 - Settings window with language, font, size, speed, display, privacy, and hotkey controls.
 - Resize mode from the overlay controls.
@@ -54,9 +60,11 @@ Build outputs:
 ```text
 bin\PromptBar.exe
 dist\PromptBarPortable.exe
+dist\PromptBar-Windows11.exe
+dist\PromptBar-Windows10.exe
 ```
 
-`dist\PromptBarPortable.exe` is the file intended for sharing.
+`dist\PromptBarPortable.exe` is the default file intended for sharing. Use the Windows-specific files when you want to force a visual mode.
 
 ## Requirements
 

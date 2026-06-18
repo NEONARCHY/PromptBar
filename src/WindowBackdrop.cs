@@ -11,7 +11,12 @@ namespace PromptBar
         private const int AccentEnableBlurBehind = 3;
         private const int AccentEnableAcrylicBlurBehind = 4;
 
-        public static void ApplyMicaAero(IntPtr handle, bool acrylic)
+        public static bool UseWindows11VisualStyle
+        {
+            get { return ResolveBackdropMode() == BackdropMode.Windows11; }
+        }
+
+        public static void ApplySettingsBackdrop(IntPtr handle)
         {
             if (handle == IntPtr.Zero)
             {
@@ -20,10 +25,68 @@ namespace PromptBar
 
             TrySetDwmAttribute(handle, NativeMethods.DWMWA_USE_IMMERSIVE_DARK_MODE, 1);
             TrySetDwmAttribute(handle, NativeMethods.DWMWA_WINDOW_CORNER_PREFERENCE, DwmCornerRound);
-            TrySetDwmAttribute(handle, NativeMethods.DWMWA_SYSTEMBACKDROP_TYPE, acrylic ? DwmBackdropAcrylic : DwmBackdropMica);
+        }
+
+        public static void ApplyOverlayBackdrop(IntPtr handle)
+        {
+            ApplyBackdrop(handle, false);
+        }
+
+        private static void ApplyBackdrop(IntPtr handle, bool settingsWindow)
+        {
+            if (handle == IntPtr.Zero)
+            {
+                return;
+            }
+
+            TrySetDwmAttribute(handle, NativeMethods.DWMWA_USE_IMMERSIVE_DARK_MODE, 1);
+            TrySetDwmAttribute(handle, NativeMethods.DWMWA_WINDOW_CORNER_PREFERENCE, DwmCornerRound);
+
+            if (ResolveBackdropMode() == BackdropMode.Windows11)
+            {
+                TrySetDwmAttribute(handle, NativeMethods.DWMWA_SYSTEMBACKDROP_TYPE, settingsWindow ? DwmBackdropMica : DwmBackdropAcrylic);
+                return;
+            }
+
             TryExtendGlassFrame(handle);
             TryEnableDwmBlur(handle);
-            TrySetAccent(handle, acrylic ? AccentEnableAcrylicBlurBehind : AccentEnableBlurBehind);
+            TrySetAccent(handle, settingsWindow ? AccentEnableAcrylicBlurBehind : AccentEnableBlurBehind);
+        }
+
+        private static BackdropMode ResolveBackdropMode()
+        {
+            string executableName = AppDomain.CurrentDomain.FriendlyName ?? "";
+            if (executableName.IndexOf("Windows10", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return BackdropMode.Windows10;
+            }
+
+            if (executableName.IndexOf("Windows11", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return BackdropMode.Windows11;
+            }
+
+            return IsWindows11OrGreater() ? BackdropMode.Windows11 : BackdropMode.Windows10;
+        }
+
+        private static bool IsWindows11OrGreater()
+        {
+            try
+            {
+                NativeMethods.OsVersionInfoEx version = new NativeMethods.OsVersionInfoEx();
+                version.OSVersionInfoSize = Marshal.SizeOf(typeof(NativeMethods.OsVersionInfoEx));
+                if (NativeMethods.RtlGetVersion(ref version) == 0)
+                {
+                    return version.MajorVersion > 10 ||
+                        (version.MajorVersion == 10 && version.BuildNumber >= 22000);
+                }
+            }
+            catch
+            {
+            }
+
+            Version fallback = Environment.OSVersion.Version;
+            return fallback.Major > 10 || (fallback.Major == 10 && fallback.Build >= 22000);
         }
 
         private static void TrySetDwmAttribute(IntPtr handle, int attribute, int value)
@@ -45,7 +108,7 @@ namespace PromptBar
                 NativeMethods.AccentPolicy policy = new NativeMethods.AccentPolicy();
                 policy.AccentState = accentState;
                 policy.AccentFlags = 2;
-                policy.GradientColor = unchecked((int)0x70181B20);
+                policy.GradientColor = unchecked((int)0xCC202124);
 
                 int policySize = Marshal.SizeOf(policy);
                 policyPointer = Marshal.AllocHGlobal(policySize);
@@ -100,6 +163,12 @@ namespace PromptBar
             catch
             {
             }
+        }
+
+        private enum BackdropMode
+        {
+            Windows10,
+            Windows11
         }
     }
 }

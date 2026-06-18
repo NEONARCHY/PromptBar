@@ -72,6 +72,9 @@ namespace PromptBar
         [DllImport("dwmapi.dll")]
         public static extern int DwmEnableBlurBehindWindow(IntPtr hwnd, ref DwmBlurBehind blurBehind);
 
+        [DllImport("ntdll.dll")]
+        public static extern int RtlGetVersion(ref OsVersionInfoEx versionInfo);
+
         [StructLayout(LayoutKind.Sequential)]
         public struct AccentPolicy
         {
@@ -105,6 +108,25 @@ namespace PromptBar
             public bool Enable;
             public IntPtr Region;
             public bool TransitionOnMaximized;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct OsVersionInfoEx
+        {
+            public int OSVersionInfoSize;
+            public int MajorVersion;
+            public int MinorVersion;
+            public int BuildNumber;
+            public int PlatformId;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string CsdVersion;
+
+            public ushort ServicePackMajor;
+            public ushort ServicePackMinor;
+            public ushort SuiteMask;
+            public byte ProductType;
+            public byte Reserved;
         }
     }
 }

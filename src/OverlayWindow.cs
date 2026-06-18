@@ -126,16 +126,16 @@ namespace PromptBar
 
             Border shell = new Border();
             shell.Background = ShellBrush();
-            shell.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(52, 255, 255, 255));
+            shell.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(34, 255, 255, 255));
             shell.BorderThickness = new Thickness(1);
             shell.CornerRadius = shellRadius;
             shell.SnapsToDevicePixels = false;
             shell.Effect = new DropShadowEffect
             {
                 Color = System.Windows.Media.Color.FromRgb(0, 0, 0),
-                BlurRadius = 30,
-                ShadowDepth = 7,
-                Opacity = 0.42
+                BlurRadius = 24,
+                ShadowDepth = 6,
+                Opacity = 0.36
             };
 
             Grid root = new Grid();
@@ -144,14 +144,14 @@ namespace PromptBar
             Border aeroWash = new Border();
             aeroWash.CornerRadius = shellRadius;
             aeroWash.Background = ShellAeroBrush();
-            aeroWash.Opacity = 0.72;
+            aeroWash.Opacity = 0.28;
             aeroWash.IsHitTestVisible = false;
             root.Children.Add(aeroWash);
 
             Border glassWash = new Border();
             glassWash.CornerRadius = shellRadius;
             glassWash.Background = ShellShineBrush();
-            glassWash.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(28, 255, 255, 255));
+            glassWash.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(18, 255, 255, 255));
             glassWash.BorderThickness = new Thickness(0, 0, 0, 1);
             glassWash.IsHitTestVisible = false;
             root.Children.Add(glassWash);
@@ -450,9 +450,9 @@ namespace PromptBar
             LinearGradientBrush brush = new LinearGradientBrush();
             brush.StartPoint = new Point(0, 0);
             brush.EndPoint = new Point(0, 1);
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(238, 22, 24, 29), 0));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(232, 9, 11, 16), 0.58));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(242, 2, 3, 7), 1));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(232, 31, 33, 41), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(236, 18, 20, 26), 0.62));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(242, 11, 12, 17), 1));
             return brush;
         }
 
@@ -461,9 +461,9 @@ namespace PromptBar
             LinearGradientBrush brush = new LinearGradientBrush();
             brush.StartPoint = new Point(0, 0);
             brush.EndPoint = new Point(1, 1);
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(34, 162, 238, 202), 0));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(18, 95, 149, 255), 0.42));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(8, 255, 255, 255), 0.7));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(16, 255, 255, 255), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(8, 76, 194, 255), 0.46));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0, 255, 255, 255), 0.74));
             brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0, 255, 255, 255), 1));
             return brush;
         }
@@ -473,8 +473,8 @@ namespace PromptBar
             LinearGradientBrush brush = new LinearGradientBrush();
             brush.StartPoint = new Point(0, 0);
             brush.EndPoint = new Point(0, 1);
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(48, 255, 255, 255), 0));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(17, 255, 255, 255), 0.3));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(26, 255, 255, 255), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(8, 255, 255, 255), 0.3));
             brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(0, 255, 255, 255), 0.7));
             return brush;
         }
@@ -484,9 +484,9 @@ namespace PromptBar
             LinearGradientBrush brush = new LinearGradientBrush();
             brush.StartPoint = new Point(0, 0);
             brush.EndPoint = new Point(1, 1);
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(92, 54, 59, 66), 0));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(62, 21, 24, 31), 0.52));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(42, 7, 9, 14), 1));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(78, 55, 58, 68), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(54, 31, 33, 41), 0.56));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(38, 19, 21, 27), 1));
             return brush;
         }
 
@@ -495,8 +495,8 @@ namespace PromptBar
             LinearGradientBrush brush = new LinearGradientBrush();
             brush.StartPoint = new Point(0, 0);
             brush.EndPoint = new Point(0, 1);
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(50, 255, 255, 255), 0));
-            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(28, 255, 255, 255), 1));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(38, 255, 255, 255), 0));
+            brush.GradientStops.Add(new GradientStop(System.Windows.Media.Color.FromArgb(20, 255, 255, 255), 1));
             return brush;
         }
 
@@ -784,7 +784,7 @@ namespace PromptBar
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
             handle = helper.Handle;
-            WindowBackdrop.ApplyMicaAero(handle, true);
+            WindowBackdrop.ApplyOverlayBackdrop(handle);
 
             int style = NativeMethods.GetWindowLong(handle, NativeMethods.GWL_EXSTYLE);
             style = style | NativeMethods.WS_EX_TOOLWINDOW;

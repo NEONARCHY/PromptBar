@@ -25,15 +25,25 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PromptBarPortable
-          path: dist/PromptBarPortable.exe
+          path: |
+            dist/PromptBarPortable.exe
+            dist/PromptBar-Windows11.exe
+            dist/PromptBar-Windows10.exe
 
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/PromptBarPortable.exe
+          files: |
+            dist/PromptBarPortable.exe
+            dist/PromptBar-Windows11.exe
+            dist/PromptBar-Windows10.exe
           body: |
-            Download `PromptBarPortable.exe` and run it directly.
+            Download `PromptBarPortable.exe` for automatic Windows 10/11 styling.
+
+            Optional builds:
+            - `PromptBar-Windows11.exe` forces the Windows 11 Fluent-style mode.
+            - `PromptBar-Windows10.exe` forces the Windows 10 fallback mode.
 
             No installer is required.
           generate_release_notes: true

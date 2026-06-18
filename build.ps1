@@ -19,6 +19,8 @@ New-Item -ItemType Directory -Force -Path $distDir | Out-Null
 
 $out = Join-Path $outDir "PromptBar.exe"
 $portableOut = Join-Path $distDir "PromptBarPortable.exe"
+$windows11Out = Join-Path $distDir "PromptBar-Windows11.exe"
+$windows10Out = Join-Path $distDir "PromptBar-Windows10.exe"
 $sources = Get-ChildItem -Path (Join-Path $root "src") -Filter "*.cs" | Sort-Object Name | ForEach-Object { $_.FullName }
 $frameworkDir = Split-Path -Parent $compiler
 $wpfDir = Join-Path $frameworkDir "WPF"
@@ -106,4 +108,8 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host "Built $out"
 Copy-Item -LiteralPath $out -Destination $portableOut -Force
+Copy-Item -LiteralPath $out -Destination $windows11Out -Force
+Copy-Item -LiteralPath $out -Destination $windows10Out -Force
 Write-Host "Portable exe $portableOut"
+Write-Host "Windows 11 exe $windows11Out"
+Write-Host "Windows 10 exe $windows10Out"
