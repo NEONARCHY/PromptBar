@@ -59,9 +59,9 @@ namespace PromptBar
             Height = 720;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             WindowStyle = WindowStyle.None;
-            AllowsTransparency = false;
+            AllowsTransparency = true;
             ResizeMode = ResizeMode.NoResize;
-            Background = new SolidColorBrush(Color.FromRgb(16, 17, 23));
+            Background = Brushes.Transparent;
             Topmost = true;
             FontFamily = new FontFamily(PrompterModel.DefaultFontFamilyName);
             UseLayoutRounding = false;
@@ -121,12 +121,19 @@ namespace PromptBar
             Title = T("SettingsWindowTitle");
 
             Border shell = new Border();
-            CornerRadius shellRadius = new CornerRadius(8);
+            CornerRadius shellRadius = new CornerRadius(14);
             shell.CornerRadius = shellRadius;
             shell.Background = SettingsShellBrush();
             shell.BorderBrush = SettingsBorderBrush(20);
             shell.BorderThickness = new Thickness(1);
             shell.SnapsToDevicePixels = false;
+            shell.Effect = new DropShadowEffect
+            {
+                Color = Color.FromRgb(0, 0, 0),
+                BlurRadius = 24,
+                ShadowDepth = 6,
+                Opacity = 0.38
+            };
 
             Grid backdrop = new Grid();
             shell.Child = backdrop;

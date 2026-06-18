@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.4 - 2026-06-18
+
+- Restored transparent rounded corners for the settings window shell.
+- Changed the floating overlay shape to a straight top edge with rounded bottom corners.
+
 ## 0.6.3 - 2026-06-18
 
 - Removed the native DWM/backdrop fill from the floating overlay so transparent rounded corners are preserved.

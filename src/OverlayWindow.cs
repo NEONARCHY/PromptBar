@@ -122,7 +122,7 @@ namespace PromptBar
 
         private UIElement BuildContent()
         {
-            CornerRadius shellRadius = new CornerRadius(36);
+            CornerRadius shellRadius = new CornerRadius(0, 0, 36, 36);
 
             Border shell = new Border();
             shell.Background = ShellBrush();
