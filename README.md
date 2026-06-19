@@ -1,5 +1,9 @@
 # PromptBar
 
+<p align="center">
+  <img src="assets/preview.png" alt="PromptBar floating teleprompter preview" width="100%">
+</p>
+
 A lightweight floating teleprompter bar for Windows.
 
 PromptBar sits at the top of your screen as a compact, always-on-top script reader. It is built for presentations, screen recordings, interviews, lessons, and any workflow where you want a script visible without switching windows.
